@@ -1,6 +1,7 @@
 package server;
 
 import org.omg.CORBA.PUBLIC_MEMBER;
+import service.ServiceMessages;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -86,7 +87,7 @@ public class Server {
     }
 
     public void broadcastClientList() {
-        StringBuilder sb = new StringBuilder("/clientlist");
+        StringBuilder sb = new StringBuilder(ServiceMessages.CLIENTLIST);
 
         for (ClientHandler c : clients) {
             sb.append(" ").append(c.getNickname());

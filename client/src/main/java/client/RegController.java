@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import service.ServiceMessages;
 
 public class RegController {
     @FXML
@@ -31,7 +32,7 @@ public class RegController {
     }
 
     public void regStatus(String result) {
-        if (result.equals("/reg_ok")) {
+        if (result.equals(ServiceMessages.REG_OK)) {
             textArea.appendText("Регистрация прошла успешно\n");
         } else {
             textArea.appendText("Регистрация не получилась. Логин или никнейм заняты\n");
