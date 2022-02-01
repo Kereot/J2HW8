@@ -29,7 +29,7 @@ public class ClientHandler {
                 try {
                     //цикл аутентификации
                     while (true) {
-                        socket.setSoTimeout(5000); // здесь или выше, есть ли разница...
+                        socket.setSoTimeout(15000); // здесь или выше, есть ли разница...
                         String str = in.readUTF();
 
                         if (str.equals(ServiceMessages.END)) {
@@ -88,6 +88,13 @@ public class ClientHandler {
                                     continue;
                                 }
                                 server.privateMsg(this, token[1], token[2]);
+                            }
+                            if (str.startsWith(ServiceMessages.CHNICK)) {
+                                String[] token = str.split(" ", 3);
+                                if (token.length != 2) {
+                                    continue;
+                                }
+                                server.changeNickname(this, login, token [1]);
                             }
 
                         } else {
