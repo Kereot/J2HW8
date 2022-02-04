@@ -10,4 +10,5 @@ public class ServiceMessages {
     public static final String REG_NO = "/reg_no";
     public static final String WHISPER = "/w";
     public static final String CLIENTLIST = "/clientlist";
+    public static final String CHNICK = "/cn";
 }

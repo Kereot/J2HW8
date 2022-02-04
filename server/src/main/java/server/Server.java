@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
@@ -21,23 +22,28 @@ public class Server {
     private List<ClientHandler> clients;
     private AuthService authService;
 
+
     public Server() {
         clients = new CopyOnWriteArrayList<>();
-        authService = new SimpleAuthService();
+//        authService = new SimpleAuthService();
+        authService = new DatabaseAuthService();
 
         try {
             server = new ServerSocket(PORT);
             System.out.println("Server started!");
+            DBHandler.connect();
+            System.out.println("DB connected");
 
             while (true) {
                 socket = server.accept();
                 System.out.println("Client connected: " + socket.getRemoteSocketAddress());
                 new ClientHandler(this, socket);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             System.out.println("Server stop");
+            DBHandler.disconnect();
             try {
                 server.close();
             } catch (IOException e) {
@@ -102,5 +108,26 @@ public class Server {
 
     public AuthService getAuthService() {
         return authService;
+    }
+
+    public void changeNickname(ClientHandler sender ,String login, String nickname) {
+        try {
+            PreparedStatement psChNick = DBHandler.getConnection().prepareStatement("UPDATE clients SET nickname = ? WHERE login = ?;");
+            psChNick.setString(1, nickname);
+            psChNick.setString(2, login);
+            try {
+                if (nickname.equals(sender.getNickname())) {
+                    throw new SQLException();
+                }
+                psChNick.executeUpdate();
+                sender.sendMsg("Nickname changed to " + nickname);
+                sender.sendMsg("Please relog for the effect to take place"); // Ок, это наверно можно доработать, чтобы релог не требовался.
+            } catch (SQLException e) {
+                sender.sendMsg("Nickname change failed, new nickname might be in use");
+            }
+        } catch (SQLException e) {
+            sender.sendMsg("Nickname change failed");
+            e.printStackTrace();
+        }
     }
 }
