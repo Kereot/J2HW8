@@ -49,7 +49,7 @@ public class ClientHandler {
                                     socket.setSoTimeout(0); //или вынести перед циклом работы
                                     authenticated = true;
                                     nickname = newNick;
-                                    sendMsg(ServiceMessages.AUTH_OK + " " + nickname);
+                                    sendMsg(ServiceMessages.AUTH_OK + " " + nickname + " " + login);
                                     server.subscribe(this);
                                     System.out.println("Client: " + nickname + " authenticated");
                                     break;
