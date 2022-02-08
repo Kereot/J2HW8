@@ -25,7 +25,7 @@ public class ClientHandler {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
-            new Thread(() -> {
+//            new Thread(() -> {
                 try {
                     //цикл аутентификации
                     while (true) {
@@ -95,6 +95,8 @@ public class ClientHandler {
                                     continue;
                                 }
                                 server.changeNickname(this, login, token [1]);
+                                nickname = token[1];
+                                server.broadcastClientList();
                             }
 
                         } else {
@@ -114,7 +116,7 @@ public class ClientHandler {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+//            }).start();
 
 
         } catch (IOException e) {
