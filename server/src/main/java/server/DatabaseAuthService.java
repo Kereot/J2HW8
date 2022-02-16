@@ -3,8 +3,11 @@ package server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseAuthService implements AuthService {
+    private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 
     @Override
     public String getNicknameByLoginAndPassword(String login, String password) {
@@ -17,7 +20,8 @@ public class DatabaseAuthService implements AuthService {
                 return rs.getString("nickname");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
         }
         return null;
     }
@@ -31,12 +35,14 @@ public class DatabaseAuthService implements AuthService {
             psDoReg.setString(3, login);
             try {
                 psDoReg.executeUpdate(); // Уникальность в полях никнейм и логин: ошибка, если заняты.
+                LOGGER.warning("New client entry with login " + login);
                 return true;
             } catch (SQLException e) {
                 return false;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
         }
         return false;
     }

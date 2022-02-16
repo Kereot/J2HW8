@@ -1,0 +1,46 @@
+фев 16, 2022 6:26:32 AM server.Server <init>
+INFO: Client connected: /127.0.0.1:56052
+фев 16, 2022 6:26:32 AM server.Server broadcastClientList
+FINER: Client-list updated
+фев 16, 2022 6:26:32 AM server.Server subscribe
+INFO: 111(login) subscribed
+фев 16, 2022 6:26:32 AM server.ClientHandler <init>
+WARNING: Client login: 111 authenticated
+фев 16, 2022 6:27:10 AM server.Server <init>
+WARNING: Server started!
+фев 16, 2022 6:27:10 AM server.Server <init>
+WARNING: DB connected
+фев 16, 2022 6:27:24 AM server.Server <init>
+INFO: Client connected: /127.0.0.1:56132
+фев 16, 2022 6:27:24 AM server.ClientHandler <init>
+INFO: Failed authentication
+фев 16, 2022 6:27:26 AM server.Server broadcastClientList
+FINER: Client-list updated
+фев 16, 2022 6:27:26 AM server.Server subscribe
+INFO: 111(login) subscribed
+фев 16, 2022 6:27:26 AM server.ClientHandler <init>
+WARNING: Client login: 111 authenticated
+фев 16, 2022 6:27:48 AM server.Server <init>
+INFO: Client connected: /127.0.0.1:56146
+фев 16, 2022 6:27:48 AM server.DatabaseAuthService registration
+WARNING: New client entry with login + Ker
+фев 16, 2022 6:27:56 AM server.Server broadcastClientList
+FINER: Client-list updated
+фев 16, 2022 6:27:56 AM server.Server subscribe
+INFO: Ker(login) subscribed
+фев 16, 2022 6:27:56 AM server.ClientHandler <init>
+WARNING: Client login: Ker authenticated
+фев 16, 2022 6:28:09 AM server.Server privateMsg
+FINEST: 111(login) failed to whisper to Her(nickname) - not found
+фев 16, 2022 6:28:22 AM server.ClientHandler <init>
+WARNING: Client disconnect!
+фев 16, 2022 6:28:22 AM server.Server broadcastClientList
+FINER: Client-list updated
+фев 16, 2022 6:28:22 AM server.Server unsubscribe
+INFO: Ker(login) unsubscribed
+фев 16, 2022 6:28:30 AM server.ClientHandler <init>
+WARNING: Client disconnect!
+фев 16, 2022 6:28:30 AM server.Server broadcastClientList
+FINER: Client-list updated
+фев 16, 2022 6:28:30 AM server.Server unsubscribe
+INFO: 111(login) unsubscribed
