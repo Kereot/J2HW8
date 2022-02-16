@@ -7,8 +7,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+    private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
     private Server server;
     private Socket socket;
     private DataInputStream in;
@@ -51,12 +54,15 @@ public class ClientHandler {
                                     nickname = newNick;
                                     sendMsg(ServiceMessages.AUTH_OK + " " + nickname + " " + login);
                                     server.subscribe(this);
-                                    System.out.println("Client: " + nickname + " authenticated");
+                                    LOGGER.warning("Client login: " + login + " authenticated");
+//                                    System.out.println("Client: " + nickname + " authenticated");
                                     break;
                                 } else {
+                                    LOGGER.info("Failed authentication");
                                     sendMsg("С этим логином уже зашли в чат");
                                 }
                             } else {
+                                LOGGER.info("Failed authentication");
                                 sendMsg("Неверный логин / пароль");
                             }
                         }
@@ -106,21 +112,25 @@ public class ClientHandler {
                 } catch (SocketTimeoutException e) {
                     sendMsg(ServiceMessages.END);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
                 } finally {
-                    System.out.println("Client disconnect!");
+                    LOGGER.warning("Client disconnect!");
+//                    System.out.println("Client disconnect!");
                     server.unsubscribe(this);
                     try {
                         socket.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
                     }
                 }
 //            }).start();
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
         }
     }
 
@@ -128,7 +138,8 @@ public class ClientHandler {
         try {
             out.writeUTF(msg);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
         }
     }
 

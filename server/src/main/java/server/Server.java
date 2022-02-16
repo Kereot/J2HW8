@@ -15,8 +15,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class Server {
+    private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
     private ServerSocket server;
     private Socket socket;
     private final int PORT = 8189;
@@ -33,28 +37,34 @@ public class Server {
 
         try {
             server = new ServerSocket(PORT);
-            System.out.println("Server started!");
+            LOGGER.warning("Server started!");
+//            System.out.println("Server started!");
             DBHandler.connect();
-            System.out.println("DB connected");
+            LOGGER.warning("DB connected");
+//            System.out.println("DB connected");
 
             while (true) {
                 socket = server.accept();
-                System.out.println("Client connected: " + socket.getRemoteSocketAddress());
+                LOGGER.info("Client connected: " + socket.getRemoteSocketAddress());
+//                System.out.println("Client connected: " + socket.getRemoteSocketAddress());
 //                new ClientHandler(this, socket);
                 service.execute(() -> {
                     new ClientHandler(this, socket);
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
         } finally {
-            System.out.println("Server stop");
+            LOGGER.warning("Server stop");
+//            System.out.println("Server stop");
             service.shutdown();
             DBHandler.disconnect();
             try {
                 server.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
             }
         }
     }
@@ -62,11 +72,13 @@ public class Server {
     public void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
         broadcastClientList();
+        LOGGER.info(clientHandler.getLogin() + "(login) subscribed");
     }
 
     public void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
         broadcastClientList();
+        LOGGER.info(clientHandler.getLogin() + "(login) unsubscribed");
     }
 
     public void broadcastMsg(ClientHandler sender, String msg) {
@@ -88,6 +100,7 @@ public class Server {
             }
         }
         sender.sendMsg("not found user: " + receiver);
+        LOGGER.finest(sender.getLogin() + "(login) failed to whisper to " + receiver + "(nickname) - not found");
     }
 
     public boolean isLoginAuthenticated(String login) {
@@ -111,6 +124,7 @@ public class Server {
         for (ClientHandler c : clients) {
             c.sendMsg(message);
         }
+        LOGGER.finer("Client-list updated");
     }
 
     public AuthService getAuthService() {
@@ -128,12 +142,15 @@ public class Server {
                 }
                 psChNick.executeUpdate();
                 sender.sendMsg("Nickname changed to " + nickname);
+                LOGGER.fine(sender.getLogin() + "(login) changed nickname to " + nickname);
             } catch (SQLException e) {
                 sender.sendMsg("Nickname change failed, new nickname might be in use");
+                LOGGER.fine(sender.getLogin() + "(login) failed to change nickname to " + nickname + " (in use)");
             }
         } catch (SQLException e) {
             sender.sendMsg("Nickname change failed");
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
+//                e.printStackTrace();
         }
     }
 }
